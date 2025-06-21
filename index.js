@@ -3,6 +3,31 @@
     const nextBtn = document.getElementById('nextBtn');
     const pageInfo = document.getElementById('pageInfo');
     const searchInput = document.getElementById('searchInput');
+    const darkToggle = document.getElementById('darkToggle');
+
+    // Load theme on startup
+        window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            darkToggle.checked = true;
+        }
+        });
+        
+        // Toggle theme on click
+        darkToggle.addEventListener('change', () => {
+        if (darkToggle.checked) {
+            document.body.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+        });
+        
+
+
+
 
     let posts = [];
     let filteredPosts = [];
