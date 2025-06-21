@@ -74,7 +74,7 @@ No build tools or servers required.
 - [*] Numbered pagination buttons
 - [ ] Infinite scroll version
 - [*] Search/filter by title
-- [ ] Dark mode toggle
+- [*] Dark mode toggle
 
 ---
 
