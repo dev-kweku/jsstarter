@@ -1,81 +1,74 @@
-// fetching data from plaveholder api
-const postContainer=document.getElementById('posts-container')
-const prevBtn=document.getElementById("prevBtn")
-const nextBtn=document.getElementById("nextBtn")
-const pageInfo=document.getElementById("pageInfo");
+    const postsContainer = document.getElementById('posts-container');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageInfo = document.getElementById('pageInfo');
+    const searchInput = document.getElementById('searchInput');
 
+    let posts = [];
+    let filteredPosts = [];
+    let currentPage = 1;
+    const postsPerPage = 5;
 
-let posts=[];
-let currentPage=1;
-let postsPerPage=5;
-
-
-async function fetchPosts(){
-    try{
-        const response=await fetch("https://jsonplaceholder.typicode.com/posts");
-        posts=await response.json();
-
+    async function fetchPosts() {
+    try {
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+        posts = await res.json();
+        filteredPosts = posts;
         renderPosts();
-        // postContainer.innerHTML='';
-
-        // posts.slice(0,10).forEach(post=>{
-        //     const postE1=document.createElement('div');
-        //     postE1.className='post';
-        //     postE1.innerHTML=`
-        //     <h2>${post.title}</h2>
-        //     <p>${post.body}</p>
-        //     `
-        //     postContainer.appendChild(postE1)
-        // })
-
+    } catch (err) {
+        postsContainer.innerHTML = '<p>Error fetching posts.</p>';
+        console.error(err);
     }
-    catch(error){
-        postContainer.innerHTML='<p>Error fetching posts</p>';
-        console.error(error)
-
     }
-}
 
-function renderPosts(){
-    postContainer.innerHTML='';
+    function renderPosts() {
+    postsContainer.innerHTML = '';
 
-    const start=(currentPage-1)*postsPerPage;
-    const end=start+postsPerPage;
-    const currentPosts=posts.slice(start,end)
+    const start = (currentPage - 1) * postsPerPage;
+    const end = start + postsPerPage;
+    const current = filteredPosts.slice(start, end);
 
+    if (current.length === 0) {
+        postsContainer.innerHTML = '<p>No matching posts found.</p>';
+        pageInfo.textContent = 'Page 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+    }
 
-    currentPosts.forEach(post=>{
-        const postE1=document.createElement('div')
-        postE1.className='post';
-        postE1.innerHTML=`
-        <h2>${post.title}</h2>
-
-        <p>${post.body}</p>
-        `
-
-
-        postContainer.appendChild(postE1)
+    current.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+        postEl.innerHTML = `<h2>${post.title}</h2><p>${post.body}</p>`;
+        postsContainer.appendChild(postEl);
     });
 
-    pageInfo.textContent=`Page ${currentPage}`;
-    prevBtn.ariaDisabled=currentPage===1;
-    nextBtn.ariaDisabled=end>=posts.length;
+    pageInfo.textContent = `Page ${currentPage}`;
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = end >= filteredPosts.length;
+    }
 
-}
+    // 🔍 Search filter logic
+    searchInput.addEventListener('input', (e) => {
+    const keyword = e.target.value.toLowerCase();
+    filteredPosts = posts.filter(post => post.title.toLowerCase().includes(keyword));
+    currentPage = 1; // reset to first page
+    renderPosts();
+    });
 
-prevBtn.addEventListener('click',()=>{
-    if(currentPage>1){
+    // Pagination handlers
+    prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
         currentPage--;
         renderPosts();
     }
-});
+    });
 
-
-nextBtn.addEventListener('click',()=>{
-    if(currentPage*postsPerPage<posts.length){
+    nextBtn.addEventListener('click', () => {
+    if (currentPage * postsPerPage < filteredPosts.length) {
         currentPage++;
-        renderPosts()
+        renderPosts();
     }
-})
+    });
 
-fetchPosts()
+    fetchPosts();
