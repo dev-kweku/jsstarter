@@ -1,8 +1,4 @@
-Ah! Got it — you meant documentation for your **"Posts API Fetch with Pagination"** website project built using **bare HTML, CSS, and JavaScript**.
 
-Here’s a professional `README.md` file for that project:
-
----
 
 ### 📄 `README.md`
 
