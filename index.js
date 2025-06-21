@@ -52,7 +52,7 @@
     searchInput.addEventListener('input', (e) => {
     const keyword = e.target.value.toLowerCase();
     filteredPosts = posts.filter(post => post.title.toLowerCase().includes(keyword));
-    currentPage = 1; // reset to first page
+    currentPage = 1; 
     renderPosts();
     });
 
